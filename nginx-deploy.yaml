@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx-apigw
+  name: nginx-apigw
+  namespace: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-apigw
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: nginx-apigw
+    spec:
+      containers:
+      - image: 664341837355.dkr.ecr.us-west-1.amazonaws.com/spoyer/nginx-plus-ubuntu20.04:latest
+        imagePullPolicy: Always
+        name: nginx-apigw
+        ports:
+        - containerPort: 80
+        - containerPort: 9000
+        volumeMounts:
+        - name: nginx-confd-cm-vol
+          mountPath: /etc/nginx/conf.d
+        - name: nginx-streamd-cm-vol
+          mountPath: /etc/nginx/stream.conf.d
+      volumes:
+      - name: nginx-confd-cm-vol
+        configMap:
+          name: nginx-confd
+          items:
+          - key: apigw-conf
+            path: apigw.conf
+      - name: nginx-streamd-cm-vol
+        configMap:
+          name: nginx-streamd
+          items:
+          - key: stream-conf
+            path: stream.conf.d
