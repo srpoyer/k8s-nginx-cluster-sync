@@ -1,0 +1,13 @@
+apiVersion: v1
+data:
+  stream-conf: |
+     server {
+      resolver 10.100.0.10 valid=20s;
+      listen 9000;
+      zone_sync;
+      zone_sync_server zone-svc.nginx.svc.cluster.local:9000 resolve;
+     }
+kind: ConfigMap
+metadata:
+  name: nginx-streamd
+  namespace: nginx
