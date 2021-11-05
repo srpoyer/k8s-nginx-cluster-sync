@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  server-conf: |
+    server {
+            listen 80;
+            return 200 "Success from Server $hostname Auth Header: $http_auth\n";
+    }
+kind: ConfigMap
+metadata:
+  name: app-conf
+  namespace: app

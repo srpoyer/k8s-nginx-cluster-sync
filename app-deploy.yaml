@@ -33,7 +33,7 @@ spec:
       volumes:
       - name: nginx-confd-cm-vol
         configMap:
-          name: nginx-conf
+          name: app-conf
           items:
           - key: server-conf
             path: api.conf
