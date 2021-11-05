@@ -1,0 +1,14 @@
+apiVersion: v1
+data:
+  jwt-key: |-
+    {"keys":
+        [{
+            "k":"ZmFudGFzdGljand0",
+            "kty":"oct",
+            "kid":"0001"
+        }]
+    }
+kind: ConfigMap
+metadata:
+  name: nginx-conf
+  namespace: nginx

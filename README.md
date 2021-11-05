@@ -8,7 +8,7 @@ The NGINX+ features used include `zone_sync` and `auth_jwt`.  `zone_sync` is a f
 Here is what the setup looks like:  
 ![alt text](artifacts/APIGW%20Architecture.jpeg)
 
-In addition to the API Gateway deployment.  NGINX+ is also used to act as the API runtime in the "API Runtime" deployment.  All it does is return a 200 along with a brief "success" message.   
+In addition to the API Gateway deployment.  NGINX+ is also used to act as the API runtime in the "API Runtime" deployment.  All it does is return a 200 along with a brief "success" message. You will need to edit the deployment's image to point to your own, private NGINX+ docker image. 
 
 The zone service is a headless service that is used to create a dynamic list of pods for zone synchronization.  
 
@@ -16,4 +16,4 @@ Once the apigw deployment has been created, expose it with:
 
 `kubectl expose deploy -n nginx nginx-apigw --type=LoadBalancer`
 
-Note: This assumes you are deploying this in a cloud environment.  
+Note: This assumes you are deploying in a cloud environment.  
