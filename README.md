@@ -11,8 +11,11 @@ Here is what the setup looks like:
 
 ## Dockerfile
 
-I used an ubuntu 20-based docker file for my testing.  You can find instructions for creating an NGINX+ Docker image here:  
-In addition to the API Gateway deployment.  NGINX+ is also used to act as the API runtime in the "API Runtime" deployment.  All it does is return a 200 along with a brief "success" message. You will need to edit the deployment's image to point to your own, private NGINX+ docker image.
+I used an Ubuntu 20-based Docker file for my testing.  You can find instructions for creating an NGINX+ Docker image here: <https://github.com/armsultan/nginx-plus-dockerfiles>.  I used the Dockerfile from this repo "as is" but made changes to the default nginx.conf file to enable the stream module.  Stream is used to perform the zone synchronization.  The nginx.conf file I used is in the Docker directory.  
+
+To create the NGINX+ Docker image you will need either a purchased or trial license from F5/NGINX.  Please only store the image in a **private** registry or you will be in violation of accepted T's & C's.  
+
+In addition to the API Gateway deployment.  NGINX+ is also used to act as the API runtime in the "nginx-app" deployment.  All it does is return a 200 along with a brief "success" message. You will need to edit the deployment's image to point to your own, private NGINX+ docker image.
 
 The zone service is a headless service that is used to create a dynamic list of pods for zone synchronization.  
 
