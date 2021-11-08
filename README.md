@@ -1,6 +1,6 @@
 # k8s-nginx-cluster-sync
 
-## Configuration and Dockerfile to run NGINX+ as an API Gateway, syncing memory zones for rate limiting
+## Configuration and guidance on building an NGINX+ Dockerfile for an API Gateway deployment in Kubernetes, syncing memory zones for cluster wide rate limiting based on JWT claims
 
 You can use this content to create an API gateway deployment and a dummy API endpoint deployment in Kubernetes with NGINX+.  If you already have an API runtime application then you can just modify the nginx-confd-cm.yaml ConfigMap to tailor it to your environment.  
 
@@ -24,7 +24,7 @@ kubectl expose deploy -n nginx nginx-apigw --type=LoadBalancer
 Note: This assumes you are deploying in a cloud environment. 
 ## Dockerfile
 
-I used an Ubuntu 20-based Docker file for my testing.  You can find instructions for creating an NGINX+ Docker image here: <https://github.com/armsultan/nginx-plus-dockerfiles>.  I used the Dockerfile from this repo "as is" but made changes to the default nginx.conf file to enable the stream module.  Stream is used to perform the zone synchronization.  The nginx.conf file I used is located in the Docker directory.  
+I used an Ubuntu 20-based Docker image for my testing.  You can find instructions for creating an NGINX+ Docker image here: <https://github.com/armsultan/nginx-plus-dockerfiles>.  I used the Dockerfile from this repo "as is" but made changes to the default nginx.conf file to enable the stream module.  Stream is used to perform the zone synchronization.  The nginx.conf file I used is located in the Docker directory.  
 
 To create the NGINX+ Docker image you will need either a purchased or trial license from F5/NGINX.  Please only store the image in a **private** registry or you will be in violation of accepted T's & C's.  
 

@@ -20,6 +20,8 @@ data:
         }
 
         location /v1/jwt {
+            auth_jwt "Test API";
+            auth_jwt_key_file conf/api_secret.jwk;
             limit_req zone=req2;
             limit_req_log_level info;
             proxy_pass http://api-svc.app.svc.cluster.local;

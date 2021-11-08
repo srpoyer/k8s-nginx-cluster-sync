@@ -3,7 +3,12 @@ data:
   server-conf: |
     server {
             listen 80;
-            return 200 "Success from Server $hostname Auth Header: $http_auth\n";
+            location /v1/jwt {
+                return 200 "Success from Pod $hostname JWT UID Claim: $jwt_claim_uid\n";
+            }
+            location /v1/auth {
+                return 200 "Success from Pod $hostname Auth Header: $http_auth\n";
+            }
     }
 kind: ConfigMap
 metadata:
