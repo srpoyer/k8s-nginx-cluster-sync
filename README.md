@@ -7,11 +7,12 @@ You can use this content to create an API gateway deployment and a dummy API end
 The NGINX+ features used include `zone_sync` and `auth_jwt`.  `zone_sync` is a feature to synchronize all of the shared memory zones on each NGINX+ instance.  It has multiple uses but in this case is used for syncing rate limit data.  `auth_jwt` is used to validate a JWT token and authenticate the client.  Since JWT claims are converted to NGINX variables, the JWT claims can be used as a key for rate limiting so you get per-client rate limiting without having to rely on client IP, for example.  
 
 Here is what the setup looks like:  
+
 ![diagram](artifacts/APIGW%20Architecture.jpeg)
 
-NGINX+ is deployed as an API Gateway deployment.  That deployment is exposed with a LoadBalancer service.  The zone service is a headless service that is used to create a dynamic list of pods for zone synchronization.  There are three configmaps for this deployment.  The "confd" configmap configures the http level loadbalancer, JWT authentication and client rate limiting.  The "streamd" config map configures the zone synchronization and the "conf" configmap contains the JWK for validating the JWT.  
+NGINX+ is deployed as an API Gateway deployment.  That deployment is exposed with a LoadBalancer service.  The zone service is a headless service used to create a dynamic list of pods for zone synchronization.  There are three configmaps for this deployment.  The "confd" configmap configures the http level loadbalancer, JWT authentication and client rate limiting.  The "streamd" config map configures the zone synchronization and the "conf" configmap contains the JWK for validating the JWT.  
 
-In addition to the API Gateway deployment.  NGINX+ is also acting as the API runtime in the "nginx-app" deployment.  All it does is return a 200 along with a brief "success" message. 
+In addition to the API Gateway deployment, NGINX+ is also acting as the API runtime in the "nginx-app" deployment.  All it does is return a 200 along with a brief "success" message. 
 
 For both deployments you will need to edit the deployment's image to point to your own, private NGINX+ docker image.
 
@@ -21,7 +22,7 @@ Once the apigw deployment has been created, expose it with:
 kubectl expose deploy -n nginx nginx-apigw --type=LoadBalancer
 ```
 
-Note: This assumes you are deploying in a cloud environment. 
+Note: This assumes you are deploying in a cloud environment or have some kind of load balancer fronting your cluster. 
 
 ## Dockerfile
 
@@ -37,7 +38,7 @@ There are two scripts in the testing directory.
 - load-jwt.sh
 - load-auth.sh
 
-load-jwt.sh runs 60 requests to your test environment.  In my testing this takes about 3 seconds and I see 7 successful requests on average with the remaining requests returning 503's.  The 503's occur when the client exceeds the configured 2 requests per second limit.  The script passes a sample jwt as a bearer token in the JWT header, also found in the testing directory.
+load-jwt.sh runs 60 requests to your test environment.  In my testing this takes about 3 seconds and I see 7 successful requests on average with the remaining requests returning 503's.  The 503's occur when the client exceeds the configured 2 requests per second limit.  The script passes a sample jwt as a bearer token in the Authorization header, also found in the testing directory in the file test.jwt.
 
 load-auth.sh is similar to the jwt script except that it uses a header called "auth" as the rate limiting key.  
 
