@@ -22,12 +22,23 @@ kubectl expose deploy -n nginx nginx-apigw --type=LoadBalancer
 ```
 
 Note: This assumes you are deploying in a cloud environment. 
+
 ## Dockerfile
 
 I used an Ubuntu 20-based Docker image for my testing.  You can find instructions for creating an NGINX+ Docker image here: <https://github.com/armsultan/nginx-plus-dockerfiles>.  I used the Dockerfile from this repo "as is" but made changes to the default nginx.conf file to enable the stream module.  Stream is used to perform the zone synchronization.  The nginx.conf file I used is located in the Docker directory.  
 
-To create the NGINX+ Docker image you will need either a purchased or trial license from F5/NGINX.  Please only store the image in a **private** registry or you will be in violation of accepted T's & C's.  
+To create the NGINX+ Docker image you will need either a purchased or trial license from F5/NGINX.  Please only upload the image to a **private** registry or you will be in violation of accepted T's & C's.  
 
 ## Testing
 
 After creating the apigw deployment and creating the zone-svc, check the logs of one of the pods.  You should see entries with the string "connected to peer", indicating that this NGINX instance is sharing zone information with other pods in the cluster.  
+
+There are two scripts in the testing directory.  
+- load-jwt.sh
+- load-auth.sh
+
+load-jwt.sh runs 60 requests to your test environment.  In my testing this takes about 3 seconds and I see 7 successful requests on average with the remaining requests returning 503's.  The 503's occur when the client exceeds the configured 2 requests per second limit.  The script passes a sample jwt as a bearer token in the JWT header, also found in the testing directory.
+
+load-auth.sh is similar to the jwt script except that it uses a header called "auth" as the rate limiting key.  
+
+For the scripts to work, set the content of the cloudlb.txt file to the entrypoint FQDN to your cluster.  
